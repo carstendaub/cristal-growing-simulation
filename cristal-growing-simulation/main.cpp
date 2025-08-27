@@ -14,7 +14,7 @@ int randomNumber() {
     static std::random_device rd;
     //static std::mt19937 gen(rd());
     static std::mt19937 gen(12345); // Set your desired seed here
-    static std::uniform_int_distribution<> distrib(0, 1); // Adjust the range as needed
+    static std::uniform_int_distribution<> distrib(0, 3); // Adjust the range as needed
     return distrib(gen);
 }
 
@@ -22,6 +22,7 @@ int main(int argc, const char * argv[]) {
     // insert code here...
     //std::cout << "Hello, World!\n";
     
+    int numberOfSteps = 10; // number of growth steps for the crystal
     
     // the current positions of the cristal
     // make initial groth step x+1
@@ -32,11 +33,12 @@ int main(int argc, const char * argv[]) {
     std::vector<int> crystalMove(0); // vector to store the crystal groth direction from random number
     
     // start the growth of the crystal after initial step
-    for (int randLoop = 0; randLoop < 5; ++randLoop) {
+    for (int randLoop = 0; randLoop < numberOfSteps - 1; ++randLoop) {
         myRand = randomNumber();
         //crystalMove(myRand);
-        std::cout << "Random Number: " << myRand << "\n";
+        //std::cout << "Random Number: " << myRand << "\n";
         //std::cout << "crystalPositionX.size(): " << crystalPositionX.size() << "\n";
+        
         int currentPositionX = crystalPositionX.at(crystalPositionX.size() - 1); // get the last position of the crystal in x direction
         int currentPositionY = crystalPositionY.at(crystalPositionY.size() - 1);
         
@@ -54,10 +56,10 @@ int main(int argc, const char * argv[]) {
                     crystalPositionX.push_back(newPositionX); // add new position to crystalPositionX
                     crystalPositionY.push_back(currentPositionY); // keep y position
 
-                    std::cout << "Crystal grows to x+1.\n";
+                    //std::cout << "Crystal grows to x+1.\n";
                 }
                 else {
-                    std::cout << "Crystal does not grow.\n";
+                    //std::cout << "Crystal does not grow.\n";
                 }
         }
         else if(myRand==1) {
@@ -71,15 +73,12 @@ int main(int argc, const char * argv[]) {
                     crystalPositionX.push_back(newPositionX); // add new position to crystalPositionX
                     crystalPositionY.push_back(currentPositionY); // keep y position
 
-                    std::cout << "Crystal grows to x-1.\n";
+                    //std::cout << "Crystal grows to x-1.\n";
                 }
                 else {
-                    std::cout << "Crystal does not grow.\n";
+                    //std::cout << "Crystal does not grow.\n";
                 }
-
-            // add new position to crystalPositionX
-            std::cout << "Crystal grows to x-1.\n";
-         }
+        }
         else if(myRand==2) {
             // move in direction y+1
             
@@ -91,14 +90,14 @@ int main(int argc, const char * argv[]) {
                 crystalPositionX.push_back(currentPositionX); // keep x position
                 crystalPositionY.push_back(newPositionY); // add new position to crystalPositionY
                 
-                std::cout << "Crystal grows to y+1.\n";
+                //std::cout << "Crystal grows to y+1.\n";
             }
             else {
-                std::cout << "Crystal does not grow.\n";
+                //std::cout << "Crystal does not grow.\n";
             }
         }
         else if(myRand==3) {
-            std::cout << "Crystal grows y-1.\n";
+            //std::cout << "Crystal grows y-1.\n";
             // the new position of the crystal is the last position + 1 in this case 0
             int newPositionY = currentPositionY - 1;
             
@@ -107,19 +106,25 @@ int main(int argc, const char * argv[]) {
                 crystalPositionX.push_back(currentPositionX); // keep x position
                 crystalPositionY.push_back(newPositionY); // add new position to crystalPositionY
                 
-                std::cout << "Crystal grows to y-1.\n";
+                //std::cout << "Crystal grows to y-1.\n";
             }
             else {
-                std::cout << "Crystal does not grow.\n";
+                //std::cout << "Crystal does not grow.\n";
             }
         }
-//        else {
-//                std::cout << "Invalid crystal growth direction.\n";
-//                exit(1);
-//        }
+        // here we can print the current position of the crystal
+        //std::cout << "Current Crystal Position: (" << crystalPositionX.back() << ", " << crystalPositionY.back() << ")\n";
 
-//    }
     }
+    
+    // here we print the full path of the crystal
+    std::cout << "Full Crystal Path:\n";
+    for (size_t i = 0; i < crystalPositionX.size(); ++i) {
+        std::cout << "(" << crystalPositionX[i] << ", " << crystalPositionY[i] << ")\n";
+    }
+
+    // the statistical analysis of the crystal growth can be done here
+    // e.g., calculating the distance from the origin, number of direction changes, etc.
     
     return 0;
     }
