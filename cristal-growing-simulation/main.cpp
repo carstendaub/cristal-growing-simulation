@@ -23,7 +23,7 @@
 int randomNumber() {
     static std::random_device rd;
     //static std::mt19937 gen(rd());
-    static std::mt19937 gen(12345); // Set your desired seed here
+    static std::mt19937 gen(12346); // Set your desired seed here
     static std::uniform_int_distribution<> distrib(0, 3); // Adjust the range as needed
     return distrib(gen);
 }
@@ -69,13 +69,27 @@ int main(int argc, const char * argv[]) {
     
     // start the growth of the crystal after initial step
     for (int randLoop = 0; randLoop < numberOfSteps - 1; ++randLoop) {
+        // check if the current position is completely surrounded, if so, break the loop
+        int currentPositionX = crystalPositionX.at(crystalPositionX.size() - 1); // get the last position of the crystal in x direction
+        int currentPositionY = crystalPositionY.at(crystalPositionY.size() - 1);
+        
+        bool upOccupied = hasAnyPositionBeenOccupied(currentPositionX, currentPositionY + 1, crystalPositionX, crystalPositionY);
+        bool downOccupied = hasAnyPositionBeenOccupied(currentPositionX, currentPositionY - 1, crystalPositionX, crystalPositionY);
+        bool leftOccupied = hasAnyPositionBeenOccupied(currentPositionX - 1, currentPositionY, crystalPositionX, crystalPositionY);
+        bool rightOccupied = hasAnyPositionBeenOccupied(currentPositionX + 1, currentPositionY, crystalPositionX, crystalPositionY);
+        if (upOccupied && downOccupied && leftOccupied && rightOccupied) {
+            std::cout << "Crystal is completely surrounded at position (" << currentPositionX << ", " << currentPositionY << "). Stopping growth.\n";
+            break;
+        }
+        
+
         myRand = randomNumber();
         //crystalMove(myRand);
         //std::cout << "Random Number: " << myRand << "\n";
         //std::cout << "crystalPositionX.size(): " << crystalPositionX.size() << "\n";
         
-        int currentPositionX = crystalPositionX.at(crystalPositionX.size() - 1); // get the last position of the crystal in x direction
-        int currentPositionY = crystalPositionY.at(crystalPositionY.size() - 1);
+        //int currentPositionX = crystalPositionX.at(crystalPositionX.size() - 1); // get the last position of the crystal in x direction
+        //int currentPositionY = crystalPositionY.at(crystalPositionY.size() - 1);
         
         //int previousPositionX = crystalPositionX.at(crystalPositionX.size() - 2); // get the previous position of the crystal in x direction
         //int previousPositionY = crystalPositionY.at(crystalPositionY.size() - 2);
