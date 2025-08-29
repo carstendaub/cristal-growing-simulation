@@ -78,92 +78,103 @@ int main(int argc, const char * argv[]) {
         int currentPositionY = crystalPositionY.at(crystalPositionY.size() - 1);
         
         //int previousPositionX = crystalPositionX.at(crystalPositionX.size() - 2); // get the previous position of the crystal in x direction
-        int previousPositionY = crystalPositionY.at(crystalPositionY.size() - 2);
-
+        //int previousPositionY = crystalPositionY.at(crystalPositionY.size() - 2);
+        
         // if we move in x-direction, which means myRand is 0 or 1
         if(myRand==0 || myRand==1) {
-                // move in direction x+1
-
-                // the new position of the crystal is the last position + 1 in this case 0
-                int newPositionX;
-                if(myRand==0){
-                    newPositionX = currentPositionX + 1;
-                }
-                else if(myRand==1)
-                {
-                    newPositionX = currentPositionX - 1;
-                }
-                else
-                {
-                    return 1; // this should never happen
-                }
-
-                // check if we are coming from the same direction, if not, update the position
-                // returns FALSE if the position has not been occupied before
-                // returns TRUE if the position has been occupied before
-                bool positionOccupied = hasAnyPositionBeenOccupied(newPositionX, currentPositionY, crystalPositionX, crystalPositionY);
-                //std::cout << "Position Occupied: " << positionOccupied << "\n";
-
-                if (positionOccupied == false) {
-                    // crystal grows
-                    crystalPositionX.push_back(newPositionX); // add new position to crystalPositionX
-                    crystalPositionY.push_back(currentPositionY); // keep y position
-
-                    //std::cout << "Crystal grows in x-direction\n";
-                }
-                else {
-                    // crystal does not grow
-                    //std::cout << "Crystal does not grow.\n";
-                    countCrystalNotGrowing++; // increment the counter if the crystal does not grow
-                }
+            // move in direction x+1
+            
+            // the new position of the crystal is the last position + 1 in this case 0
+            int newPositionX;
+            if(myRand==0){
+                newPositionX = currentPositionX + 1;
+            }
+            else if(myRand==1)
+            {
+                newPositionX = currentPositionX - 1;
+            }
+            else
+            {
+                return 1; // this should never happen
+            }
+            
+            // check if we are coming from the same direction, if not, update the position
+            // returns FALSE if the position has not been occupied before
+            // returns TRUE if the position has been occupied before
+            bool positionOccupied = hasAnyPositionBeenOccupied(newPositionX, currentPositionY, crystalPositionX, crystalPositionY);
+            //std::cout << "Position Occupied: " << positionOccupied << "\n";
+            
+            if (positionOccupied == false) {
+                // crystal grows
+                crystalPositionX.push_back(newPositionX); // add new position to crystalPositionX
+                crystalPositionY.push_back(currentPositionY); // keep y position
+                
+                //std::cout << "Crystal grows in x-direction\n";
+            }
+            else {
+                // crystal does not grow
+                --randLoop; // decrement randLoop to retry this step
+                
+                //std::cout << "Crystal does not grow.\n";
+                countCrystalNotGrowing++; // increment the counter if the crystal does not grow
+            }
         }
         // if we move in y-direction, which means myRand is 2 or 3
-        if(myRand==2 || myRand==3) {
-                // move in y-direction
-
-                // the new position of the crystal is the last position + 1 in this case 2
-                int newPositionY;
-                if(myRand==2){
-                    newPositionY = currentPositionY + 1;
-                }
-                else if(myRand==3)
-                {
-                    newPositionY = currentPositionY - 1;
-                }
-                else
-                {
-                    return 1; // this should never happen
-                }
-
-                // check if we are coming from the same direction, if not, update the position
-                // returns FALSE if the position has not been occupied before
-                // returns TRUE if the position has been occupied before
-                bool positionOccupied = hasAnyPositionBeenOccupied(currentPositionX, newPositionY, crystalPositionX, crystalPositionY);
-                //std::cout << "Position Occupied: " << positionOccupied << "\n";
-
-                if (positionOccupied == false) {
-                    // crystal grows
-                    crystalPositionX.push_back(currentPositionX); // keep x position
-                    crystalPositionY.push_back(newPositionY); // add new position to crystalPositionY
-
-                    //std::cout << "Crystal grows in y-direction\n";
-                }
-                else {
-                    // crystal does not grow
-                    //std::cout << "Crystal does not grow.\n";
-                    countCrystalNotGrowing++; // increment the counter if the crystal does not grow
-                }
+        else if(myRand==2 || myRand==3) {
+            // move in y-direction
+            
+            // the new position of the crystal is the last position + 1 in this case 2
+            int newPositionY;
+            if(myRand==2){
+                newPositionY = currentPositionY + 1;
+            }
+            else if(myRand==3)
+            {
+                newPositionY = currentPositionY - 1;
+            }
+            else
+            {
+                return 1; // this should never happen
+            }
+            
+            // check if we are coming from the same direction, if not, update the position
+            // returns FALSE if the position has not been occupied before
+            // returns TRUE if the position has been occupied before
+            bool positionOccupied = hasAnyPositionBeenOccupied(currentPositionX, newPositionY, crystalPositionX, crystalPositionY);
+            //std::cout << "Position Occupied: " << positionOccupied << "\n";
+            
+            if (positionOccupied == false) {
+                // crystal grows
+                crystalPositionX.push_back(currentPositionX); // keep x position
+                crystalPositionY.push_back(newPositionY); // add new position to crystalPositionY
+                
+                //std::cout << "Crystal grows in y-direction\n";
+            }
+            else {
+                // crystal does not grow
+                --randLoop; // decrement randLoop to retry this step
+                
+                //std::cout << "Crystal does not grow.\n";
+                countCrystalNotGrowing++; // increment the counter if the crystal does not grow
+            }
+        }
+        else {
+            std::cerr << "Error: Invalid random number generated: " << myRand << "\n";
+            return 1; // exit with error
         }
     }
     
     std::cout << "unsuccessfull growing steps: " << countCrystalNotGrowing << "\n";
+    
+    int totalCtystalSteps = static_cast<int>(crystalPositionX.size());
+    std::cout << "Total crystal steps: " << totalCtystalSteps << "\n";
     
     // here we print the full path of the crystal
     //std::cout << "Full Crystal Path:\n";
     //for (size_t i = 0; i < crystalPositionX.size(); ++i) {
     //    std::cout << "(" << crystalPositionX[i] << ", " << crystalPositionY[i] << ")\n";
     //}
-
+    
     
     // write the crystal path to a CSV file for further analysis or plotting
     std::ofstream outFile("/Users/carsten.daub/Downloads/crystal_path.csv");
@@ -183,4 +194,4 @@ int main(int argc, const char * argv[]) {
     // e.g., calculating the distance from the origin, number of direction changes, etc.
     
     return 0;
-    }
+}

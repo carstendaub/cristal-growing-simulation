@@ -53,7 +53,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-iterations 200"
+            argument = "-iterations 50"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
