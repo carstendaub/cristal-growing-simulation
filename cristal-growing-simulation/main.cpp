@@ -23,7 +23,7 @@
 int randomNumber() {
     static std::random_device rd;
     //static std::mt19937 gen(rd());
-    static std::mt19937 gen(12346); // Set your desired seed here
+    static std::mt19937 gen(12349); // Set your desired seed here
     static std::uniform_int_distribution<> distrib(0, 3); // Adjust the range as needed
     return distrib(gen);
 }
@@ -41,29 +41,16 @@ bool hasAnyPositionBeenOccupied(int x, int y, const std::vector<int>& posX, cons
 }
     
 
-int main(int argc, const char * argv[]) {
-    
-    // insert code here...
-    //std::cout << "Hello, World!\n";
-    
-    //global variables
-    int countCrystalNotGrowing = 0; // counter for the number of times the crystal does not grow
-    int numberOfSteps = 10; // number of growth steps for the crystal
-    
-    // parse command line arguments
-    for (int i = 1; i < argc - 1; ++i) {
-        if (std::strcmp(argv[i], "-iterations") == 0) {
-            numberOfSteps = std::atoi(argv[i + 1]);
-        }
-    }
-    // for debugging purposes print the number of steps
-    std::cout << "numSteps from command line: " << numberOfSteps << "\n";
-    
+
+
+bool runSimulation(int& numberOfSteps, int& countCrystalNotGrowing) {
+    // this function runs the simulation of the crystal growth
+
     // the current positions of the cristal
     // make initial groth step x+1
     std::vector <int> crystalPositionX = {0,1}; // first growth step in dirextion x+1
     std::vector <int> crystalPositionY = {0,0}; // first growth step in dirextion y+0
-    
+
     int myRand; //for storing the current random number
     std::vector<int> crystalMove(0); // vector to store the crystal groth direction from random number
     
@@ -82,7 +69,7 @@ int main(int argc, const char * argv[]) {
             break;
         }
         
-
+        
         myRand = randomNumber();
         //crystalMove(myRand);
         //std::cout << "Random Number: " << myRand << "\n";
@@ -206,6 +193,30 @@ int main(int argc, const char * argv[]) {
     
     // the statistical analysis of the crystal growth can be done here
     // e.g., calculating the distance from the origin, number of direction changes, etc.
+    
+    return 0;
+}
+
+int main(int argc, const char * argv[]) {
+    
+    // insert code here...
+    //std::cout << "Hello, World!\n";
+    
+    //global variables
+    int countCrystalNotGrowing = 0; // counter for the number of times the crystal does not grow
+    int numberOfSteps = 10; // default argument for number of growth steps for the crystal
+    
+    // parse command line arguments
+    for (int i = 1; i < argc - 1; ++i) {
+        if (std::strcmp(argv[i], "-iterations") == 0) {
+            numberOfSteps = std::atoi(argv[i + 1]);
+        }
+    }
+    // for debugging purposes print the number of steps
+    std::cout << "numSteps from command line: " << numberOfSteps << "\n";
+    
+        
+    runSimulation(numberOfSteps, countCrystalNotGrowing);
     
     return 0;
 }
