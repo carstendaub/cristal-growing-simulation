@@ -22,8 +22,8 @@
 // Function to generate a random number
 int randomNumber() {
     static std::random_device rd;
-    //static std::mt19937 gen(rd());
-    static std::mt19937 gen(12349); // Set your desired seed here
+    static std::mt19937 gen(rd());
+    //static std::mt19937 gen(12349); // Set your desired seed here
     static std::uniform_int_distribution<> distrib(0, 3); // Adjust the range as needed
     return distrib(gen);
 }
@@ -46,6 +46,9 @@ bool hasAnyPositionBeenOccupied(int x, int y, const std::vector<int>& posX, cons
 bool runSimulation(int& numberOfSteps, int& countCrystalNotGrowing) {
     // this function runs the simulation of the crystal growth
 
+    bool printToFile = false; // flag to control file output
+    
+    
     // the current positions of the cristal
     // make initial groth step x+1
     std::vector <int> crystalPositionX = {0,1}; // first growth step in dirextion x+1
@@ -65,21 +68,12 @@ bool runSimulation(int& numberOfSteps, int& countCrystalNotGrowing) {
         bool leftOccupied = hasAnyPositionBeenOccupied(currentPositionX - 1, currentPositionY, crystalPositionX, crystalPositionY);
         bool rightOccupied = hasAnyPositionBeenOccupied(currentPositionX + 1, currentPositionY, crystalPositionX, crystalPositionY);
         if (upOccupied && downOccupied && leftOccupied && rightOccupied) {
-            std::cout << "Crystal is completely surrounded at position (" << currentPositionX << ", " << currentPositionY << "). Stopping growth.\n";
+            //std::cout << "Crystal is completely surrounded at position (" << currentPositionX << ", " << currentPositionY << "). Stopping growth.\n";
             break;
         }
         
         
         myRand = randomNumber();
-        //crystalMove(myRand);
-        //std::cout << "Random Number: " << myRand << "\n";
-        //std::cout << "crystalPositionX.size(): " << crystalPositionX.size() << "\n";
-        
-        //int currentPositionX = crystalPositionX.at(crystalPositionX.size() - 1); // get the last position of the crystal in x direction
-        //int currentPositionY = crystalPositionY.at(crystalPositionY.size() - 1);
-        
-        //int previousPositionX = crystalPositionX.at(crystalPositionX.size() - 2); // get the previous position of the crystal in x direction
-        //int previousPositionY = crystalPositionY.at(crystalPositionY.size() - 2);
         
         // if we move in x-direction, which means myRand is 0 or 1
         if(myRand==0 || myRand==1) {
@@ -165,10 +159,10 @@ bool runSimulation(int& numberOfSteps, int& countCrystalNotGrowing) {
         }
     }
     
-    std::cout << "unsuccessfull growing steps: " << countCrystalNotGrowing << "\n";
+    //std::cout << "unsuccessfull growing steps: " << countCrystalNotGrowing << "\n";
     
     int totalCtystalSteps = static_cast<int>(crystalPositionX.size());
-    std::cout << "Total crystal steps: " << totalCtystalSteps << "\n";
+    std::cout << "Total crystal growing steps: " << totalCtystalSteps << "\n";
     
     // here we print the full path of the crystal
     //std::cout << "Full Crystal Path:\n";
@@ -176,21 +170,21 @@ bool runSimulation(int& numberOfSteps, int& countCrystalNotGrowing) {
     //    std::cout << "(" << crystalPositionX[i] << ", " << crystalPositionY[i] << ")\n";
     //}
     
-    
-    // write the crystal path to a CSV file for further analysis or plotting
-    std::ofstream outFile("/Users/carsten.daub/Downloads/crystal_path.csv");
-    //std::ofstream outFile("crystal_path.csv");
-    if (outFile.is_open()) {
-        outFile << "x,y\n"; // header
-        for (size_t i = 0; i < crystalPositionX.size(); ++i) {
-            outFile << crystalPositionX[i] << "," << crystalPositionY[i] << "\n";
+    if(printToFile){
+        // write the crystal path to a CSV file for further analysis or plotting
+        std::ofstream outFile("/Users/carsten.daub/Downloads/crystal_path.csv");
+        //std::ofstream outFile("crystal_path.csv");
+        if (outFile.is_open()) {
+            outFile << "x,y\n"; // header
+            for (size_t i = 0; i < crystalPositionX.size(); ++i) {
+                outFile << crystalPositionX[i] << "," << crystalPositionY[i] << "\n";
+            }
+            outFile.close();
+            //std::cout << "Crystal path written to crystal_path.csv\n";
+        } else {
+            std::cerr << "Failed to open crystal_path.csv for writing.\n";
         }
-        outFile.close();
-        std::cout << "Crystal path written to crystal_path.csv\n";
-    } else {
-        std::cerr << "Failed to open crystal_path.csv for writing.\n";
     }
-    
     // the statistical analysis of the crystal growth can be done here
     // e.g., calculating the distance from the origin, number of direction changes, etc.
     
@@ -215,8 +209,8 @@ int main(int argc, const char * argv[]) {
     // for debugging purposes print the number of steps
     std::cout << "numSteps from command line: " << numberOfSteps << "\n";
     
-        
-    runSimulation(numberOfSteps, countCrystalNotGrowing);
-    
+    for(int i=0; i<100; i++)
+        runSimulation(numberOfSteps, countCrystalNotGrowing);
+
     return 0;
 }
