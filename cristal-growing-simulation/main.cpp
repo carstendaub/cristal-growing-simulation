@@ -22,8 +22,8 @@
 // Function to generate a random number
 int randomNumber() {
     static std::random_device rd;
-    static std::mt19937 gen(rd());
-    //static std::mt19937 gen(12349); // Set your desired seed here
+    //static std::mt19937 gen(rd());
+    static std::mt19937 gen(12341); // Set your desired seed here
     static std::uniform_int_distribution<> distrib(0, 3); // Adjust the range as needed
     return distrib(gen);
 }
@@ -46,7 +46,7 @@ bool hasAnyPositionBeenOccupied(int x, int y, const std::vector<int>& posX, cons
 bool runSimulation(int& numberOfSteps, int& countCrystalNotGrowing) {
     // this function runs the simulation of the crystal growth
 
-    bool printToFile = false; // flag to control file output
+    bool printToFile = true; // flag to control file output
     
     
     // the current positions of the cristal
@@ -57,7 +57,7 @@ bool runSimulation(int& numberOfSteps, int& countCrystalNotGrowing) {
     int myRand; //for storing the current random number
     std::vector<int> crystalMove(0); // vector to store the crystal groth direction from random number
     
-    // start the growth of the crystal after initial step
+    // loop for the crystal growth steps
     for (int randLoop = 0; randLoop < numberOfSteps - 1; ++randLoop) {
         // check if the current position is completely surrounded, if so, break the loop
         int currentPositionX = crystalPositionX.at(crystalPositionX.size() - 1); // get the last position of the crystal in x direction
@@ -198,7 +198,7 @@ int main(int argc, const char * argv[]) {
     
     //global variables
     int countCrystalNotGrowing = 0; // counter for the number of times the crystal does not grow
-    int numberOfSteps = 10; // default argument for number of growth steps for the crystal
+    int numberOfSteps = 10; // default argument for number of growth steps for the crystal, overwritten by command line argument if provided
     
     // parse command line arguments
     for (int i = 1; i < argc - 1; ++i) {
